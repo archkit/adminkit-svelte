@@ -44,6 +44,10 @@
     data.length > 0 && selected.size === data.length
   );
 
+  const someSelected = $derived(
+    selected.size > 0 && selected.size < data.length
+  );
+
   function toggleAll() {
     if (allSelected) {
       selected = new Set();
@@ -72,7 +76,7 @@
     }
   }
 
-  function sortAttr(key: string): string {
+  function sortAttr(key: string): 'none' | 'ascending' | 'descending' {
     if (!sort || sort.key !== key) return 'none';
     return sort.direction;
   }
@@ -87,7 +91,7 @@
     <thead>
       <tr>
         {#if selectable}
-          <th><input type="checkbox" aria-label="全選択" checked={allSelected} onchange={toggleAll}></th>
+          <th><input type="checkbox" aria-label="全選択" checked={allSelected} indeterminate={someSelected} onchange={toggleAll}></th>
         {/if}
         {#each columns as col}
           <th

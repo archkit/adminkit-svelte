@@ -1,0 +1,53 @@
+# adminkit ⇄ adminkit-svelte パリティ方針
+
+adminkit-svelte は adminkit（バニラ CSS+JS フレームワーク）の Svelte 5 移植版。
+両者の関係と、挙動のズレ（ドリフト）を管理するための方針をここに集約する。
+
+## 構成の前提
+
+| 層 | 共有方法 | 真実の源 |
+|---|---|---|
+| CSS / デザイントークン | `@green-spot/adminkit/css` を npm 依存で読み込む（単一ソース） | adminkit の `src/css/` |
+| 対話挙動（JS） | **共有しない。各 `.svelte` で再実装** | adminkit の `src/js/adminkit.js` |
+
+→ CSS は共有なので自動で揃う。**JS 挙動は二重実装なので、片方の修正がもう片方へ伝播しない**。
+これがドリフトの構造的な原因。新しい対話挙動を adminkit に足したら、必ず Svelte 側にも反映する。
+
+## 同期リチュアル（CSS 側の変更を取り込む）
+
+adminkit の CSS / トークンを変更したら:
+
+1. adminkit を `vX.Y.Z` タグ発行（CI が npm publish）
+2. adminkit-svelte の `package.json` の `@green-spot/adminkit` を新バージョンへ bump
+3. `npm install` → `npm run build` で確認
+
+> adminkit リポジトリ上の `version` は常に `0.0.0` のプレースホルダ。実バージョンはタグ駆動（`v0.1.0`, `v0.1.1` …）。
+
+## 挙動パリティ・チェックリスト
+
+adminkit.js の挙動を Svelte 側が再現できているか。対応したら状態を ✅ にする。
+
+| 挙動 | adminkit.js | Svelte 側の現状 | 状態 |
+|---|---|---|---|
+| Dropdown: anchor-positioning フォールバック | あり（`CSS.supports` + JS 配置） | `Dropdown.svelte` に移植（`ontoggle` で JS 配置） | ✅ |
+| Dropdown: キーボード操作（上下/Home/End）+ `aria-expanded` 同期 | あり | `Dropdown.svelte` に移植（`onkeydown` + `ontoggle`） | ✅ |
+| Toast: `danger` の `aria-live="assertive"` | あり | `Toast.svelte` で variant に応じて出し分け | ✅ |
+| Toast: ホバーで自動消去を一時停止 | あり | `toast-store` に pause/resume タイマー、コンテナで `onmouseenter/leave` | ✅ |
+| Tabs: Home / End / 上下キー + フォーカス移動 | あり | `Tabs.svelte` で全キー対応 + フォーカス移動 | ✅ |
+| DataTable: ヘッダーチェックの `indeterminate` 表示 | あり | `DataTable.svelte` で `someSelected` を `indeterminate` にバインド | ✅ |
+| ナビ: `aria-current` の親 `details` 自動展開 | あり | `+layout.svelte` で `open={pathname.startsWith(...)}` により宣言的に処理（adminkit.js より堅牢） | ✅ |
+| ミニサイドバー: hover で入れ子 `details` を展開（アクティブページ含む場合は維持） | あり（`adminkit.js` 130-147） | `ShellMini.svelte` に action `use:miniHover` で移植 | ✅ |
+
+## 移植「不要」な項目（Svelte / プラットフォームが代替するもの）
+
+ドリフトに見えるが、再実装してはいけない / する必要がないもの:
+
+- **モーダルのフォーカストラップ / Escape** — ネイティブ `<dialog>.showModal()` が処理。adminkit 側も同様で再実装不要
+- **Dropdown の Escape / 外側クリック閉じ** — ネイティブ Popover API が処理
+- **Toast の HTML エスケープ** — Svelte が `{}` 補間で自動エスケープ。`escapeHtml` 相当は不要
+- **行クリック遷移（`data-href`）** — Svelte では props / イベントで表現する設計。属性フックは移植しない
+
+## 運用ルール
+
+- adminkit に新しい対話挙動を足したら、このチェックリストに 1 行追加し、Svelte 側の対応状況を記録する
+- CSS だけの変更（トークン追加・リファクタ等）はクラス契約が不変なら Svelte 側の対応不要。バージョン bump で取り込む

@@ -22,12 +22,17 @@
   setHeadingLevel(parentLevel);
 
   function handleKeydown(e: KeyboardEvent) {
+    const btns = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="tab"]')];
     const idx = tabs.findIndex(t => t.id === active);
-    if (e.key === 'ArrowRight') {
-      active = tabs[(idx + 1) % tabs.length].id;
-    } else if (e.key === 'ArrowLeft') {
-      active = tabs[(idx - 1 + tabs.length) % tabs.length].id;
-    }
+    let next = -1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % tabs.length;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = tabs.length - 1;
+    if (next < 0) return;
+    e.preventDefault();
+    active = tabs[next].id;
+    btns[next]?.focus();
   }
 </script>
 
