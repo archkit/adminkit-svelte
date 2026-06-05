@@ -17,10 +17,11 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
+      # Trusted Publishing (OIDC) には npm >= 11.5.1 が必要（Node22 同梱は 10 系）
+      - run: npm install -g npm@latest
       - run: npm ci
       - name: タグからバージョンを設定
         run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
       - run: npm run build
-      - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # トークン不要: OIDC で認証し provenance も自動付与される
+      - run: npm publish --access public
