@@ -15,11 +15,18 @@ adminkit-svelte は adminkit（バニラ CSS+JS フレームワーク）の Svel
 
 ## 同期リチュアル（CSS 側の変更を取り込む）
 
-adminkit の CSS / トークンを変更したら:
+adminkit の CSS / トークンを変更して svelte に反映する手順。**順序が重要**:
 
-1. adminkit を `vX.Y.Z` タグ発行（CI が npm publish）
-2. adminkit-svelte の `package.json` の `@green-spot/adminkit` を新バージョンへ bump
-3. `npm install` → `npm run build` で確認
+1. **adminkit を先に公開** — `vX.Y.Z` タグを push（CI が npm publish）。`npm view @green-spot/adminkit version` で npm に出たのを確認
+2. **svelte で依存と lock を更新** — adminkit が npm に出てから:
+   - `package.json` の `@green-spot/adminkit` を新バージョンへ bump
+   - **`npm install` で `package-lock.json` を再生成し、package.json と同じコミットに含める**
+   - `npm run build` で確認
+3. **svelte を公開** — `vX.Y.Z` タグを push
+
+> ⚠️ **落とし穴**: adminkit を公開する前に svelte の依存だけ `^X.Y.Z` に上げてコミットすると、その版がまだ npm に無いため lock を更新できず、CI の `npm ci` が **EUSAGE（lock と package.json の不一致）** で止まる。必ず「**adminkit 公開 → svelte の lock 更新**」の順で。
+
+> ⚠️ publish は**タグが指すコミットの** workflow で動く。`publish.yml` を変えたら、タグを新コミットへ貼り直す（`git tag -d` → 再作成 → push）。失敗 run の再実行では旧 workflow を拾う。
 
 > adminkit リポジトリ上の `version` は常に `0.0.0` のプレースホルダ。実バージョンはタグ駆動（`v0.1.0`, `v0.1.1` …）。
 
