@@ -4,7 +4,7 @@
 
   type Size = 'small';
 
-  interface Props extends HTMLInputAttributes {
+  interface Props extends Omit<HTMLInputAttributes, 'size'> {
     size?: Size;
     value?: string;
   }
