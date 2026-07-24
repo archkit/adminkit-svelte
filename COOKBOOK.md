@@ -114,6 +114,8 @@
 </Main>
 ```
 
+> 表・コード・長文など既定幅（32rem）に収まらない内容を出すモーダルは `<Modal size="wide">`（48rem）を使う。利用側で `.c-modal` の幅を `:global` 上書きしない。
+
 ## 一覧ページ（DataTable 版）
 
 `DataTable` を使うと、テーブルのヘッダー・ソート・チェックボックス・アクション列が自動生成される。`filter` snippet でフィルタバーを統合、`Dropdown` の id は自動生成。

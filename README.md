@@ -270,7 +270,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Banner` | `variant?: 'success' \| 'warning' \| 'danger'`, `dismissible?: boolean` | ページ上部の帯状通知 |
 | `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数。Shell に内蔵されているため配置不要 |
 | `clearToasts()` | — | 全トーストをクリア |
-| `Modal` | `open: boolean`, `label: string`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御 |
+| `Modal` | `open: boolean`, `label: string`, `size?: 'default' \| 'wide'`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御。`size="wide"`（48rem）は表・コード・長文など既定幅（32rem）に収まらないコンテンツ用 |
 | `Dropdown` | `trigger: Snippet<[string]>`, `menu: Snippet` | ドロップダウンメニュー。id は自動生成され trigger に渡される |
 | `Tooltip` | `text: string` | ツールチップ |
 | `Tabs` | `tabs: { id, label, content: Snippet }[]`, `active?: string`, `label: string` | タブ。キーボードナビゲーション対応 |
