@@ -34,6 +34,8 @@ export { default as Banner } from './Banner.svelte';
 export { default as Toast } from './Toast.svelte';
 export { show as showToast, clear as clearToasts } from './toast-store.svelte.js';
 export { default as Modal } from './Modal.svelte';
+export { default as Dialog } from './Dialog.svelte';
+export { confirmDialog, promptDialog, setDialogDefaults } from './dialog-store.svelte.js';
 export { default as Dropdown } from './Dropdown.svelte';
 export { default as Tooltip } from './Tooltip.svelte';
 export { default as Tabs } from './Tabs.svelte';

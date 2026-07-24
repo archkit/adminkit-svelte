@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte';
   import Menu from 'lucide-svelte/icons/menu';
   import Toast from './Toast.svelte';
+  import Dialog from './Dialog.svelte';
 
   interface Props {
     title?: string;
@@ -56,3 +57,4 @@
   </div>
 </div>
 <Toast />
+<Dialog />

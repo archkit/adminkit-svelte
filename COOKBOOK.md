@@ -116,6 +116,32 @@
 
 > 表・コード・長文など既定幅（32rem）に収まらない内容を出すモーダルは `<Modal size="wide">`（48rem）を使う。利用側で `.c-modal` の幅を `:global` 上書きしない。
 
+### 確認・入力だけの単純なダイアログ（confirmDialog / promptDialog）
+
+メッセージ + OK/キャンセルだけの確認や 1 行入力は、Modal を組まずに Promise ベースのヘルパーを使う（`window.confirm` / `window.prompt` の置き換え。ホストは Shell / ShellTopnav に内蔵済み）。
+
+```svelte
+<script lang="ts">
+  import { confirmDialog, promptDialog } from '@green-spot/adminkit-svelte';
+
+  async function removeUser(name: string) {
+    if (!(await confirmDialog({ message: `${name} を削除しますか？`, danger: true }))) return;
+    // 削除処理
+  }
+
+  async function rename(current: string) {
+    const name = await promptDialog({ message: '新しい名前', initial: current });
+    if (name === null) return; // キャンセル
+    // リネーム処理
+  }
+</script>
+```
+
+- キャンセル・Esc・背景クリックは confirm が `false`、prompt が `null`
+- 破壊的操作は `danger: true`（実行ボタンが danger 表示になる）
+- ボタンの既定ラベル（OK / キャンセル）を変えるときはレイアウトで `setDialogDefaults({ confirmLabel, cancelLabel })`
+- フォームや複数フィールドを伴う確認は従来どおり Modal を組む
+
 ## 一覧ページ（DataTable 版）
 
 `DataTable` を使うと、テーブルのヘッダー・ソート・チェックボックス・アクション列が自動生成される。`filter` snippet でフィルタバーを統合、`Dropdown` の id は自動生成。

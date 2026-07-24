@@ -271,6 +271,10 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数。Shell に内蔵されているため配置不要 |
 | `clearToasts()` | — | 全トーストをクリア |
 | `Modal` | `open: boolean`, `label: string`, `size?: 'default' \| 'wide'`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御。`size="wide"`（48rem）は表・コード・長文など既定幅（32rem）に収まらないコンテンツ用 |
+| `confirmDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, danger? }` | `window.confirm` の置き換え。`Promise<boolean>` を返す（キャンセル・Esc・背景クリックは false）。ホストは Shell / ShellTopnav に内蔵されているため配置不要。Enter 誤爆防止のため初期フォーカスはキャンセル側 |
+| `promptDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, initial?, placeholder? }` | `window.prompt` の置き換え。`Promise<string \| null>` を返す（キャンセル・Esc・背景クリックは null）。Enter で確定 |
+| `setDialogDefaults(labels)` | `{ confirmLabel?, cancelLabel? }` | ダイアログボタンの既定ラベル（初期値 OK / キャンセル）を差し替える。i18n するアプリはレイアウトで呼ぶ |
+| `Dialog` | — | confirmDialog / promptDialog のホスト。Shell / ShellTopnav に内蔵済み。ShellMini / ShellStandalone 等で使う場合のみ自前で配置する |
 | `Dropdown` | `trigger: Snippet<[string]>`, `menu: Snippet` | ドロップダウンメニュー。id は自動生成され trigger に渡される |
 | `Tooltip` | `text: string` | ツールチップ |
 | `Tabs` | `tabs: { id, label, content: Snippet }[]`, `active?: string`, `label: string` | タブ。キーボードナビゲーション対応 |

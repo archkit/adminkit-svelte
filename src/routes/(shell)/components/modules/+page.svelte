@@ -3,7 +3,7 @@
     Main, Section, Cluster, PageHeader,
     Badge, Button, Modal, Tabs, Segment, Dropdown,
     Pagination, List, DefinitionList, Fields, Field, Check, Toggle, CheckGroup,
-    ThemeSwitcher, Dot
+    ThemeSwitcher, Dot, confirmDialog, promptDialog
   } from '$lib';
   import Bell from 'lucide-svelte/icons/bell';
   import CircleHelp from 'lucide-svelte/icons/circle-help';
@@ -15,6 +15,7 @@
   import Pipette from 'lucide-svelte/icons/pipette';
 
   let modalOpen = $state(false);
+  let dialogResult = $state('（未実行）');
   let currentPage = $state(1);
   let segmentPeriod = $state('day');
   let segmentView = $state('list');
@@ -250,6 +251,20 @@
         <Button variant="primary" onclick={() => modalOpen = false}>確認</Button>
       {/snippet}
     </Modal>
+
+    <Section heading="確認・入力ダイアログ（confirmDialog / promptDialog）">
+      <Cluster>
+        <Button onclick={async () => { dialogResult = `confirm → ${await confirmDialog({ message: 'この操作を実行してもよろしいですか？' })}`; }}>confirm</Button>
+        <Button variant="danger" onclick={async () => { dialogResult = `confirm(danger) → ${await confirmDialog({ message: 'この項目を削除します。\nこの操作は元に戻せません。', title: '削除の確認', danger: true })}`; }}>confirm（danger + タイトル）</Button>
+        <Button onclick={async () => { dialogResult = `prompt → ${JSON.stringify(await promptDialog({ message: '新しい名前', initial: 'example.txt' }))}`; }}>prompt</Button>
+        <Button onclick={async () => {
+          const a = confirmDialog({ message: '1 件目の確認です。' });
+          const b = confirmDialog({ message: '2 件目の確認です（キュー動作）。' });
+          dialogResult = `queue → ${await a} / ${await b}`;
+        }}>連続 2 件（キュー）</Button>
+      </Cluster>
+      <p>結果: <code>{dialogResult}</code></p>
+    </Section>
   </Section>
 
   <!-- Tabs -->

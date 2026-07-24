@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import Toast from './Toast.svelte';
+  import Dialog from './Dialog.svelte';
 
   interface Props {
     title?: string;
@@ -30,3 +31,4 @@
   </div>
 </div>
 <Toast />
+<Dialog />

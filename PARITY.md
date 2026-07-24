@@ -63,6 +63,10 @@ adminkit.js の挙動を Svelte 側が再現できているか。対応したら
 - **Toast の HTML エスケープ** — Svelte が `{}` 補間で自動エスケープ。`escapeHtml` 相当は不要
 - **行クリック遷移（`data-href`）** — Svelte では props / イベントで表現する設計。属性フックは移植しない
 
+## Svelte 独自の追加機能（adminkit.js に対応物なし）
+
+- **confirmDialog / promptDialog（`dialog-store` + `Dialog.svelte`）** — `window.confirm` / `window.prompt` を置き換える Promise ベースのヘルパー。CSS は既存の `.c-modal` 契約のみ使用（adminkit 側に JS 対応物は不要）。ホストは Shell / ShellTopnav に内蔵
+
 ## 運用ルール
 
 - adminkit に新しい対話挙動を足したら、このチェックリストに 1 行追加し、Svelte 側の対応状況を記録する
