@@ -2,7 +2,7 @@
   import {
     Main, Section, Stack, Cluster, Grid, PageHeader,
     Button, Badge, Alert, Banner, Card, Divider, Avatar, Tooltip,
-    Skeleton, SkeletonRows, Spinner, LoadingState, CopyButton,
+    Skeleton, SkeletonRow, Spinner, LoadingState, CopyButton,
     Search, Tag, TagList, Dot, ToggleGroup, Stats, Progress,
     Stepper, EmptyState, Upload, showToast, ThemeSwitcher
   } from '$lib';
@@ -173,9 +173,17 @@
         </Cluster>
       </div>
     </Section>
-    <Section heading="一覧・テーブルの行（SkeletonRows）">
-      <div class="c-card">
-        <SkeletonRows rows={4} cols={4} />
+    <Section heading="テーブルの行（SkeletonRow）">
+      <!-- 実テーブルの中に入れる。ヘッダーが残り、列幅もテーブルレイアウトが決める -->
+      <div class="c-table-scroll">
+        <table class="c-table" aria-busy="true">
+          <thead>
+            <tr><th>名前</th><th>種別</th><th>ステータス</th><th>更新日時</th></tr>
+          </thead>
+          <tbody>
+            {#each [0, 1, 2] as i (i)}<SkeletonRow cols={4} />{/each}
+          </tbody>
+        </table>
       </div>
     </Section>
   </Section>

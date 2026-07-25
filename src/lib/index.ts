@@ -23,7 +23,7 @@ export { default as Stats } from './Stats.svelte';
 export { default as Progress } from './Progress.svelte';
 export { default as Stepper } from './Stepper.svelte';
 export { default as Skeleton } from './Skeleton.svelte';
-export { default as SkeletonRows } from './SkeletonRows.svelte';
+export { default as SkeletonRow } from './SkeletonRow.svelte';
 export { default as Spinner } from './Spinner.svelte';
 export { default as LoadingState } from './LoadingState.svelte';
 export { default as CopyButton } from './CopyButton.svelte';

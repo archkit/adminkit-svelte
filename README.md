@@ -259,7 +259,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Progress` | `value: number`, `max?: number`, `variant?: string`, `pageTop?: boolean`, `label: string`, `showLabel?: boolean` | プログレスバー |
 | `Stepper` | `steps: { label: string; state?: 'done' \| 'active' }[]` | ステッパー |
 | `Skeleton` | `shape?: 'text' \| 'circle'`, `width?: string`, `height?: string`, `label?: string \| null` | スケルトンローダー。`label={null}` で装飾扱い（親が読み込み中を伝えているとき） |
-| `SkeletonRows` | `rows?: number`, `cols?: number`, `label?: string` | 一覧・テーブルの行プレースホルダ。**行の形が分かっている領域**はこちらを使う（レイアウトのずれが減る） |
+| `SkeletonRow` | `cols: number` | テーブルの読み込み中プレースホルダ（1 行分の `<tr>`）。**実テーブルの `<tbody>` の中に置く** — ヘッダーが消えず、列幅もテーブルレイアウトが決めるため読み込み後のずれが小さい。読み上げは `<table aria-busy={loading}>` 側に付ける |
 | `Spinner` | `size?: 'small' \| 'large'`, `current?: boolean`, `label?: string \| null` | 読み込み中インジケータ。ボタン内は `current` で文字色に合わせる |
 | `LoadingState` | `compact?: boolean`, `message?: string`, `label?: string` | 領域中央のスピナー（+ 補足テキスト）。**形が分からない / 面積が小さい領域**（ページ全体・モーダル内）に使う。`EmptyState` と余白が揃えてある |
 | `Dot` | `variant?: 'accent' \| 'success' \| 'warning'`, `count?: number \| string` | 通知ドット。`count` で数値表示 |
