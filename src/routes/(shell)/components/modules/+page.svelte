@@ -257,6 +257,7 @@
         <Button onclick={async () => { dialogResult = `confirm → ${await confirmDialog({ message: 'この操作を実行してもよろしいですか？' })}`; }}>confirm</Button>
         <Button variant="danger" onclick={async () => { dialogResult = `confirm(danger) → ${await confirmDialog({ message: 'この項目を削除します。\nこの操作は元に戻せません。', title: '削除の確認', danger: true })}`; }}>confirm（danger + タイトル）</Button>
         <Button onclick={async () => { dialogResult = `prompt → ${JSON.stringify(await promptDialog({ message: '新しい名前', initial: 'example.txt' }))}`; }}>prompt</Button>
+        <Button variant="danger" onclick={async () => { dialogResult = `confirm(requireText) → ${await confirmDialog({ message: '確認のため、ワークスペース名 my-workspace を入力してください。', title: 'ワークスペースを削除', danger: true, requireText: 'my-workspace', confirmLabel: '削除' })}`; }}>confirm（requireText）</Button>
         <Button onclick={async () => {
           const a = confirmDialog({ message: '1 件目の確認です。' });
           const b = confirmDialog({ message: '2 件目の確認です（キュー動作）。' });

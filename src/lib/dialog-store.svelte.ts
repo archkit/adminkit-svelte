@@ -5,6 +5,12 @@ export interface ConfirmDialogOptions {
   cancelLabel?: string;
   /** 削除など破壊的操作は true（実行ボタンが danger 表示になる） */
   danger?: boolean;
+  /**
+   * 取り返しのつかない操作向け。ここに渡した文字列を利用者が**完全一致**で入力するまで
+   * 実行ボタンを無効にする（対象名のタイプを求める確認）。danger との併用を前提とする。
+   * 入力欄には placeholder として同じ文字列を出す。
+   */
+  requireText?: string;
 }
 
 export interface PromptDialogOptions {
@@ -25,6 +31,7 @@ export interface DialogRequest {
   confirmLabel?: string;
   cancelLabel?: string;
   danger?: boolean;
+  requireText?: string;
   initial?: string;
   placeholder?: string;
   resolve: (value: boolean | string | null) => void;

@@ -65,7 +65,9 @@ adminkit.js の挙動を Svelte 側が再現できているか。対応したら
 
 ## Svelte 独自の追加機能（adminkit.js に対応物なし）
 
-- **confirmDialog / promptDialog（`dialog-store` + `Dialog.svelte`）** — `window.confirm` / `window.prompt` を置き換える Promise ベースのヘルパー。CSS は既存の `.c-modal` 契約のみ使用（adminkit 側に JS 対応物は不要）。ホストは Shell / ShellTopnav に内蔵
+- **confirmDialog / promptDialog（`dialog-store` + `Dialog.svelte`）** — `window.confirm` / `window.prompt` を置き換える Promise ベースのヘルパー。CSS は既存の `.c-modal` / `.c-fields` 契約のみ使用（adminkit 側に JS 対応物は不要）。ホストは Shell / ShellTopnav に内蔵
+  - `requireText` オプション: 指定文字列と完全一致するまで実行ボタンを無効にする（取り返しのつかない操作の確認）。判定は `dialog-guard.ts` の `canSubmitDialog`（純粋関数・`tests/dialog-guard.test.ts` で固定）
+- **CopyButton** — `navigator.clipboard.writeText` + 成否のコールバック。通知の文言はアプリ側（i18n）に残すため、コンポーネントは何も表示しない。CSS は既存の `.c-button` 契約のみ使用（adminkit 側に JS 対応物は不要）
 
 ## 運用ルール
 

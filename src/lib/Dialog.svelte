@@ -6,6 +6,7 @@
     settleDialog,
     type DialogRequest,
   } from './dialog-store.svelte.js';
+  import { canSubmitDialog } from './dialog-guard.js';
 
   const current = $derived(getCurrentDialog());
   const defaults = $derived(getDialogDefaults());
@@ -16,6 +17,11 @@
   let cancelEl = $state<HTMLButtonElement | null>(null);
   let inputEl = $state<HTMLInputElement | null>(null);
 
+  // requireText: 指定文字列と完全一致するまで実行ボタンを無効にする（取り返しのつかない操作の確認）
+  const needsText = $derived(shown?.kind === 'confirm' && !!shown?.requireText);
+  const showInput = $derived(shown?.kind === 'prompt' || needsText);
+  const canSubmit = $derived(canSubmitDialog(shown?.requireText, value));
+
   // キュー先頭の変化を表示状態へ反映する
   $effect(() => {
     if (current === shown) return;
@@ -23,9 +29,10 @@
     open = current !== null;
     if (current) {
       value = current.initial ?? '';
-      // prompt は入力欄へ。confirm は Enter 誤爆防止のため初期フォーカスをキャンセル側に置く
+      // prompt と requireText 付き confirm は入力欄へ（requireText は一致するまで実行できないため
+      // Enter の誤爆が起きない）。通常の confirm は Enter 誤爆防止で初期フォーカスをキャンセル側に置く
       requestAnimationFrame(() => {
-        if (current.kind === 'prompt') inputEl?.focus();
+        if (current.kind === 'prompt' || current.requireText) inputEl?.focus();
         else cancelEl?.focus();
       });
     }
@@ -46,7 +53,7 @@
   }
 
   function submit() {
-    if (!shown) return;
+    if (!shown || !canSubmit) return;
     settleDialog(shown.id, shown.kind === 'confirm' ? true : value);
     open = false;
   }
@@ -61,7 +68,7 @@
   {#key shown.id}
     <Modal bind:open label={shown.title ?? shown.message} header={shown.title ? titleHeader : undefined}>
       <p class="message">{shown.message}</p>
-      {#if shown.kind === 'prompt'}
+      {#if showInput}
         <form
           class="c-fields"
           onsubmit={(e) => {
@@ -74,7 +81,10 @@
             bind:this={inputEl}
             bind:value
             aria-label={shown.message}
-            placeholder={shown.placeholder}
+            placeholder={shown.requireText ?? shown.placeholder}
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
           />
         </form>
       {/if}
@@ -82,7 +92,12 @@
         <button type="button" class="c-button" bind:this={cancelEl} onclick={cancel}>
           {shown?.cancelLabel ?? defaults.cancelLabel}
         </button>
-        <button type="button" class="c-button {shown?.danger ? 'danger' : 'primary'}" onclick={submit}>
+        <button
+          type="button"
+          class="c-button {shown?.danger ? 'danger' : 'primary'}"
+          disabled={!canSubmit}
+          onclick={submit}
+        >
           {shown?.confirmLabel ?? defaults.confirmLabel}
         </button>
       {/snippet}

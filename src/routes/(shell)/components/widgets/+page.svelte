@@ -2,7 +2,8 @@
   import {
     Main, Section, Stack, Cluster, Grid, PageHeader,
     Button, Badge, Alert, Banner, Card, Divider, Avatar, Tooltip,
-    Skeleton, Search, Tag, TagList, Dot, ToggleGroup, Stats, Progress,
+    Skeleton, SkeletonRows, Spinner, LoadingState, CopyButton,
+    Search, Tag, TagList, Dot, ToggleGroup, Stats, Progress,
     Stepper, EmptyState, Upload, showToast, ThemeSwitcher
   } from '$lib';
   import Bell from 'lucide-svelte/icons/bell';
@@ -171,6 +172,65 @@
           </Stack>
         </Cluster>
       </div>
+    </Section>
+    <Section heading="一覧・テーブルの行（SkeletonRows）">
+      <div class="c-card">
+        <SkeletonRows rows={4} cols={4} />
+      </div>
+    </Section>
+  </Section>
+
+  <!-- Spinner -->
+  <Section heading="Spinner">
+    <Section heading="サイズ">
+      <Cluster>
+        <Spinner size="small" />
+        <Spinner />
+        <Spinner size="large" />
+      </Cluster>
+    </Section>
+    <Section heading="領域の読み込み中（LoadingState）">
+      <div class="c-card">
+        <LoadingState message="読み込み中..." />
+      </div>
+    </Section>
+    <Section heading="狭い領域（compact）">
+      <div class="c-card">
+        <LoadingState compact />
+      </div>
+    </Section>
+    <Section heading="ボタン内（current）">
+      <Cluster>
+        <Button variant="primary" disabled>
+          <Spinner size="small" current label={null} />送信中...
+        </Button>
+        <Button disabled>
+          <Spinner size="small" current label={null} />保存中...
+        </Button>
+      </Cluster>
+    </Section>
+  </Section>
+
+  <!-- CopyButton -->
+  <Section heading="CopyButton">
+    <Section heading="基本（アイコンのみ / 文字あり）">
+      <Cluster>
+        <code>git@github.com:owner/repo.git</code>
+        <CopyButton
+          text="git@github.com:owner/repo.git"
+          label="クローン URL をコピー"
+          oncopied={() => showToast({ title: 'コピーしました', variant: 'success' })}
+          onfailed={() => showToast({ title: 'コピーに失敗しました', variant: 'danger' })}
+        />
+        <CopyButton
+          text="git@github.com:owner/repo.git"
+          label="クローン URL をコピー"
+          oncopied={() => showToast({ title: 'コピーしました', variant: 'success' })}
+        >
+          コピー
+        </CopyButton>
+        <CopyButton text={null} label="コピー対象なし" />
+      </Cluster>
     </Section>
   </Section>
 

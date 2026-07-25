@@ -237,6 +237,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `CheckGroup` | `legend?: string`, `horizontal?: boolean` | check/radio の横並びグループ |
 | `Button` | `variant?: 'primary' \| 'success' \| 'danger' \| 'ghost'`, `size?: 'small'` | ボタン |
 | `Search` | `size?: 'small'`, `value?: string` | 検索入力。アイコン内蔵 |
+| `CopyButton` | `text: string \| null`, `label: string`, `variant?`, `size?: 'small'`, `disabled?: boolean`, `oncopied?: (copied) => void`, `onfailed?: (error) => void` | クリップボードへコピー。`text` が空なら自動で無効。**通知の文言はコールバックでアプリ側（i18n）に残す**（コンポーネントは何も表示しない） |
 | `Upload` | `accept?: string`, `multiple?: boolean`, `onchange?: (files) => void` | ファイルアップロード。ドラッグ&ドロップ対応 |
 | `Segment` | `options: {value, label}[]`, `value?: string`, `name: string`, `label: string`, `size?: 'small'` | セグメントコントロール（radio ベース） |
 | `ToggleGroup` | `options: {value, label, icon?}[]`, `value?: string`, `label: string`, `size?: 'small'` | トグルグループ（button ベース） |
@@ -257,7 +258,10 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Stats` | `label: string`, `value: string`, `sub?: Snippet`, `accent?: boolean`, `icon?: Snippet` | KPI カード。見出しレベルは自動管理 |
 | `Progress` | `value: number`, `max?: number`, `variant?: string`, `pageTop?: boolean`, `label: string`, `showLabel?: boolean` | プログレスバー |
 | `Stepper` | `steps: { label: string; state?: 'done' \| 'active' }[]` | ステッパー |
-| `Skeleton` | `shape?: 'text' \| 'circle'`, `width?: string`, `height?: string` | スケルトンローダー |
+| `Skeleton` | `shape?: 'text' \| 'circle'`, `width?: string`, `height?: string`, `label?: string \| null` | スケルトンローダー。`label={null}` で装飾扱い（親が読み込み中を伝えているとき） |
+| `SkeletonRows` | `rows?: number`, `cols?: number`, `label?: string` | 一覧・テーブルの行プレースホルダ。**行の形が分かっている領域**はこちらを使う（レイアウトのずれが減る） |
+| `Spinner` | `size?: 'small' \| 'large'`, `current?: boolean`, `label?: string \| null` | 読み込み中インジケータ。ボタン内は `current` で文字色に合わせる |
+| `LoadingState` | `compact?: boolean`, `message?: string`, `label?: string` | 領域中央のスピナー（+ 補足テキスト）。**形が分からない / 面積が小さい領域**（ページ全体・モーダル内）に使う。`EmptyState` と余白が揃えてある |
 | `Dot` | `variant?: 'accent' \| 'success' \| 'warning'`, `count?: number \| string` | 通知ドット。`count` で数値表示 |
 | `Divider` | `label?: string` | 区切り線。`label` でテキスト付き |
 | `EmptyState` | `heading?: string`, `icon?: Snippet` | 空状態の表示。`heading` で自動レベルの見出しを出力 |
@@ -271,7 +275,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数。Shell に内蔵されているため配置不要 |
 | `clearToasts()` | — | 全トーストをクリア |
 | `Modal` | `open: boolean`, `label: string`, `size?: 'default' \| 'wide'`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御。`size="wide"`（48rem）は表・コード・長文など既定幅（32rem）に収まらないコンテンツ用 |
-| `confirmDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, danger? }` | `window.confirm` の置き換え。`Promise<boolean>` を返す（キャンセル・Esc・背景クリックは false）。ホストは Shell / ShellTopnav に内蔵されているため配置不要。Enter 誤爆防止のため初期フォーカスはキャンセル側 |
+| `confirmDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, danger?, requireText? }` | `window.confirm` の置き換え。`Promise<boolean>` を返す（キャンセル・Esc・背景クリックは false）。ホストは Shell / ShellTopnav に内蔵されているため配置不要。Enter 誤爆防止のため初期フォーカスはキャンセル側。**`requireText`** を渡すと、その文字列を完全一致で入力するまで実行ボタンが無効になる（取り返しのつかない操作向け・`danger` との併用が前提。入力欄へ初期フォーカス） |
 | `promptDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, initial?, placeholder? }` | `window.prompt` の置き換え。`Promise<string \| null>` を返す（キャンセル・Esc・背景クリックは null）。Enter で確定 |
 | `setDialogDefaults(labels)` | `{ confirmLabel?, cancelLabel? }` | ダイアログボタンの既定ラベル（初期値 OK / キャンセル）を差し替える。i18n するアプリはレイアウトで呼ぶ |
 | `Dialog` | — | confirmDialog / promptDialog のホスト。Shell / ShellTopnav に内蔵済み。ShellMini / ShellStandalone 等で使う場合のみ自前で配置する |
