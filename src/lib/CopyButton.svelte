@@ -21,16 +21,11 @@
     onfailed?: (error: unknown) => void;
   }
 
-  let {
-    text,
-    label,
-    variant = 'ghost',
-    size = 'small',
-    disabled = false,
-    children,
-    oncopied,
-    onfailed,
-  }: Props = $props();
+  // variant / size に既定は置かない。既定値があると「既定スタイルのボタン」を表現できず、
+  // 既定ボタンが並ぶモーダルのフッター等で浮くため（アイコンのみで使うときは
+  // variant="ghost" size="small" を明示する）
+  let { text, label, variant, size, disabled = false, children, oncopied, onfailed }: Props =
+    $props();
 
   const cls = $derived(['c-button', variant, size].filter(Boolean).join(' '));
   const isDisabled = $derived(disabled || !text);

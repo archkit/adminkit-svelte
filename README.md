@@ -237,7 +237,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `CheckGroup` | `legend?: string`, `horizontal?: boolean` | check/radio の横並びグループ |
 | `Button` | `variant?: 'primary' \| 'success' \| 'danger' \| 'ghost'`, `size?: 'small'` | ボタン |
 | `Search` | `size?: 'small'`, `value?: string` | 検索入力。アイコン内蔵 |
-| `CopyButton` | `text: string \| null`, `label: string`, `variant?`, `size?: 'small'`, `disabled?: boolean`, `oncopied?: (copied) => void`, `onfailed?: (error) => void` | クリップボードへコピー。`text` が空なら自動で無効。**通知の文言はコールバックでアプリ側（i18n）に残す**（コンポーネントは何も表示しない） |
+| `CopyButton` | `text: string \| null`, `label: string`, `variant?`, `size?: 'small'`, `disabled?: boolean`, `oncopied?: (copied) => void`, `onfailed?: (error) => void` | クリップボードへコピー。`text` が空なら自動で無効。**通知の文言はコールバックでアプリ側（i18n）に残す**（コンポーネントは何も表示しない）。`variant` / `size` に既定は無い — アイコンのみで置くときは `variant="ghost" size="small"` を明示する |
 | `Upload` | `accept?: string`, `multiple?: boolean`, `onchange?: (files) => void` | ファイルアップロード。ドラッグ&ドロップ対応 |
 | `Segment` | `options: {value, label}[]`, `value?: string`, `name: string`, `label: string`, `size?: 'small'` | セグメントコントロール（radio ベース） |
 | `ToggleGroup` | `options: {value, label, icon?}[]`, `value?: string`, `label: string`, `size?: 'small'` | トグルグループ（button ベース） |

@@ -219,6 +219,8 @@
         <CopyButton
           text="git@github.com:owner/repo.git"
           label="クローン URL をコピー"
+          variant="ghost"
+          size="small"
           oncopied={() => showToast({ title: 'コピーしました', variant: 'success' })}
           onfailed={() => showToast({ title: 'コピーに失敗しました', variant: 'danger' })}
         />
@@ -229,7 +231,7 @@
         >
           コピー
         </CopyButton>
-        <CopyButton text={null} label="コピー対象なし" />
+        <CopyButton text={null} label="コピー対象なし" variant="ghost" size="small" />
       </Cluster>
     </Section>
   </Section>
