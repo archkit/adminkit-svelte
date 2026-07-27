@@ -43,6 +43,7 @@ export { confirmDialog, promptDialog, setDialogDefaults } from './dialog-store.s
 export { default as Dropdown } from './Dropdown.svelte';
 export { default as Tooltip } from './Tooltip.svelte';
 export { default as Tabs } from './Tabs.svelte';
+export { default as Accordion } from './Accordion.svelte';
 export { default as Pagination } from './Pagination.svelte';
 export { default as ActionBar } from './ActionBar.svelte';
 export { default as ErrorPage } from './ErrorPage.svelte';
