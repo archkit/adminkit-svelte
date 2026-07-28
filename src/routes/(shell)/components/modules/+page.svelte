@@ -263,6 +263,16 @@
           const b = confirmDialog({ message: '2 件目の確認です（キュー動作）。' });
           dialogResult = `queue → ${await a} / ${await b}`;
         }}>連続 2 件（キュー）</Button>
+        <!-- 実アプリで多い形: 1 件目を解決 → API 往復 → その結果で 2 件目を出す（同時 push の
+             キューとは別経路。前のダイアログの close イベントが遅れて届き、2 件目を即キャンセル
+             していた不具合の再現ケース） -->
+        <Button onclick={async () => {
+          const first = await confirmDialog({ message: '1 件目の確認です（OK を押すと少し待って 2 件目を出します）。' });
+          if (!first) { dialogResult = 'sequential → 1 件目でキャンセル'; return; }
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          const second = await confirmDialog({ message: '2 件目の確認です（1 件目の解決後に出す）。', danger: true });
+          dialogResult = `sequential → ${first} / ${second}`;
+        }}>逐次 2 件（1 件目の解決後に 2 件目）</Button>
       </Cluster>
       <p>結果: <code>{dialogResult}</code></p>
     </Section>
