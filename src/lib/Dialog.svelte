@@ -7,6 +7,7 @@
     type DialogRequest,
   } from './dialog-store.svelte.js';
   import { canSubmitDialog } from './dialog-guard.js';
+  import { dialogFocusTarget } from './dialog-focus.js';
 
   const current = $derived(getCurrentDialog());
   const defaults = $derived(getDialogDefaults());
@@ -28,12 +29,16 @@
     shown = current;
     open = current !== null;
     if (current) {
-      value = current.initial ?? '';
-      // prompt と requireText 付き confirm は入力欄へ（requireText は一致するまで実行できないため
-      // Enter の誤爆が起きない）。通常の confirm は Enter 誤爆防止で初期フォーカスをキャンセル側に置く
+      // rAF まで持ち越すので、この実行時点のリクエストをローカルに固定する（コールバック内で
+      // current（$derived）を読み直すと、保留中に閉じられていた場合に null を触ってしまう）
+      const req = current;
+      value = req.initial ?? '';
+      // フォーカス先の判定は dialog-focus.ts（背面タブで保留された rAF が復帰時にまとめて
+      // 実行されるケースを含めてテストする）
       requestAnimationFrame(() => {
-        if (current.kind === 'prompt' || current.requireText) inputEl?.focus();
-        else cancelEl?.focus();
+        const focus = dialogFocusTarget(getCurrentDialog(), req);
+        if (focus === 'input') inputEl?.focus();
+        else if (focus === 'cancel') cancelEl?.focus();
       });
     }
   });
