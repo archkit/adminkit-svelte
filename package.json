@@ -32,7 +32,7 @@
     "svelte": "^5.0.0"
   },
   "dependencies": {
-    "@green-spot/adminkit": "^0.1.8"
+    "@green-spot/adminkit": "^0.1.11"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.0.0",

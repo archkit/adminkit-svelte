@@ -4,8 +4,10 @@
     Button, Badge, Alert, Banner, Card, Divider, Avatar, Tooltip,
     Skeleton, SkeletonRow, Spinner, LoadingState, CopyButton,
     Search, Tag, TagList, Dot, ToggleGroup, Stats, Progress,
+    Meter, Strip, Kbd, List, Row,
     Stepper, EmptyState, Upload, showToast, ThemeSwitcher
   } from '$lib';
+  import type { StripCell } from '$lib';
   import Bell from 'lucide-svelte/icons/bell';
   import CircleHelp from 'lucide-svelte/icons/circle-help';
   import Mail from 'lucide-svelte/icons/mail';
@@ -25,9 +27,17 @@
   import ListIcon from 'lucide-svelte/icons/list';
   import Grid2x2 from 'lucide-svelte/icons/grid-2x2';
   import Kanban from 'lucide-svelte/icons/kanban';
+  import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 
   let toggleValue = $state('list');
   let togglePeriod = $state('day');
+
+  const stripCells: StripCell[] = [70, 82, 65, 90, 45, 88, 74, 96, 60, 83, 52, 91, 68, 79, 86].map(
+    (height) => ({
+      height,
+      variant: height < 50 ? 'danger' : height < 70 ? 'warning' : undefined,
+    }),
+  );
 </script>
 
 <Progress value={40} label="ページ進捗" pageTop />
@@ -368,6 +378,84 @@
     </Section>
   </Section>
 
+  <!-- Meter -->
+  <Section heading="Meter">
+    <p>内訳の帯。単一の進捗は Progress、区分が複数あるときはこちら。</p>
+    <Section heading="基本">
+      <Meter segments={[{ width: 68 }]} label="ストレージ" value="68%" />
+    </Section>
+    <Section heading="内訳（stacked）">
+      <Meter
+        size="stacked"
+        segments={[
+          { width: 62 },
+          { width: 24, variant: 'warning' },
+          { width: 14, variant: 'danger' },
+        ]}
+        label="状態別の件数"
+      />
+    </Section>
+    <Section heading="行に添える（inline）">
+      <List variants={['rows', 'bordered']}>
+        <Row title="api-gateway" value="82%">
+          {#snippet trail()}
+            <Meter size="inline" segments={[{ width: 82 }]} label="api-gateway の使用率" />
+          {/snippet}
+        </Row>
+        <Row title="worker-queue" value="94%">
+          {#snippet trail()}
+            <Meter
+              size="inline"
+              segments={[{ width: 94, variant: 'warning' }]}
+              label="worker-queue の使用率"
+            />
+          {/snippet}
+        </Row>
+      </List>
+    </Section>
+  </Section>
+
+  <!-- Strip -->
+  <Section heading="Strip">
+    <p>時間の帯。等間隔のセル列＝時間、色＝状態、高さ＝量。</p>
+    <Section heading="基本">
+      <Strip cells={stripCells} label="直近 15 日の稼働" from="15 日前" to="今日" />
+    </Section>
+    <Section heading="行に添える（compact）">
+      <List variants={['rows', 'bordered']}>
+        <Row title="本番 API" sub="api.example.com" value="99.4%">
+          {#snippet lead()}<Dot variant="success" />{/snippet}
+          {#snippet trail()}
+            <Strip
+              compact
+              cells={[
+                { height: 80 },
+                { height: 100 },
+                { height: 55, variant: 'warning' },
+                { height: 92 },
+                { height: 88 },
+                { height: 100 },
+              ]}
+              label="本番 API の稼働"
+              style="width: 6rem; flex: none"
+            />
+          {/snippet}
+        </Row>
+      </List>
+    </Section>
+  </Section>
+
+  <!-- Kbd -->
+  <Section heading="Kbd">
+    <p>ショートカットのキーを 1 つ表す。組み合わせは Kbd を並べて書く。</p>
+    <Cluster>
+      <span><Kbd>⌘</Kbd><Kbd>K</Kbd> 検索</span>
+      <span><Kbd>↑</Kbd><Kbd>↓</Kbd> 移動</span>
+      <span><Kbd>↵</Kbd> 決定</span>
+      <span><Kbd>esc</Kbd> 閉じる</span>
+    </Cluster>
+  </Section>
+
   <!-- Empty State -->
   <Section heading="Empty State">
     <Section heading="基本">
@@ -384,6 +472,36 @@
         <h3>検索結果が見つかりません</h3>
         <p>別のキーワードで再度お試しください。</p>
       </EmptyState>
+    </Section>
+    <Section heading="取得失敗（error）">
+      <EmptyState variant="error">
+        <TriangleAlert />
+        <h3>取得に失敗しました</h3>
+        <p>ネットワークに接続できませんでした。</p>
+        <Button variant="danger" size="small">再試行</Button>
+      </EmptyState>
+    </Section>
+    <Section heading="3 状態が同じ寸法になること">
+      <p>空 / 読み込み中 / 取得失敗を切り替えても枠の高さが変わらない。</p>
+      <Grid>
+        <Card>
+          <EmptyState>
+            <InboxIcon />
+            <h3>データがありません</h3>
+            <p>最初の 1 件を作成してください。</p>
+          </EmptyState>
+        </Card>
+        <Card>
+          <LoadingState message="読み込んでいます…" />
+        </Card>
+        <Card>
+          <EmptyState variant="error">
+            <TriangleAlert />
+            <h3>取得に失敗しました</h3>
+            <p>時間をおいて再試行してください。</p>
+          </EmptyState>
+        </Card>
+      </Grid>
     </Section>
     <Section heading="カード内">
       <Card>

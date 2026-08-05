@@ -1,8 +1,8 @@
 <script>
   import {
     Main, Section, Cluster, PageHeader,
-    Badge, Button, Modal, Tabs, Segment, Dropdown,
-    Pagination, List, DefinitionList, Fields, Field, Check, Toggle, CheckGroup,
+    Badge, Button, Modal, Drawer, Palette, Kbd, Tabs, Segment, Dropdown,
+    Pagination, List, Row, DefinitionList, Fields, Field, Check, Toggle, CheckGroup,
     ThemeSwitcher, Dot, confirmDialog, promptDialog
   } from '$lib';
   import Bell from 'lucide-svelte/icons/bell';
@@ -15,7 +15,20 @@
   import Pipette from 'lucide-svelte/icons/pipette';
 
   let modalOpen = $state(false);
+  let drawerOpen = $state(false);
+  let paletteOpen = $state(false);
+  let paletteQuery = $state('');
   let dialogResult = $state('（未実行）');
+
+  const paletteItems = [
+    { label: 'プロジェクト設定', sub: '/settings' },
+    { label: 'メンバー', sub: '/members' },
+    { label: '監査ログ', sub: '/audit-logs' },
+  ];
+  // 絞り込みは利用側の責務（adminkit / adminkit-svelte とも候補の操作は持たない）
+  const paletteMatches = $derived(
+    paletteItems.filter((i) => i.label.includes(paletteQuery) || i.sub.includes(paletteQuery)),
+  );
   let currentPage = $state(1);
   let segmentPeriod = $state('day');
   let segmentView = $state('list');
@@ -252,6 +265,55 @@
       {/snippet}
     </Modal>
 
+    <Section heading="Drawer（右端に固定）">
+      <p>一覧を表示したまま 1 件の詳細や編集を出す。判断を 1 つ求めるだけなら Modal を使う。</p>
+      <Cluster>
+        <Button variant="primary" onclick={() => drawerOpen = true}>ドロワーを開く</Button>
+      </Cluster>
+      <Drawer bind:open={drawerOpen} label="接続の詳細">
+        {#snippet header()}<h3>接続の詳細</h3>{/snippet}
+        <DefinitionList>
+          <div><dt>名前</dt><dd>本番 API</dd></div>
+          <div><dt>ホスト</dt><dd>api.example.com</dd></div>
+          <div><dt>状態</dt><dd><Badge variant="success">稼働中</Badge></dd></div>
+        </DefinitionList>
+        <p>背景を押すか <Kbd>esc</Kbd> で閉じます。</p>
+        {#snippet footer()}
+          <Button onclick={() => drawerOpen = false}>閉じる</Button>
+          <Button variant="primary" onclick={() => drawerOpen = false}>保存</Button>
+        {/snippet}
+      </Drawer>
+    </Section>
+
+    <Section heading="Palette（コマンドパレット）">
+      <p>候補の絞り込みと上下移動はキットに含まれない（アプリ固有のため）。ここでは利用側で絞っている。</p>
+      <Cluster>
+        <Button variant="primary" onclick={() => paletteOpen = true}>パレットを開く</Button>
+      </Cluster>
+      <Palette
+        bind:open={paletteOpen}
+        bind:query={paletteQuery}
+        label="コマンド検索"
+        placeholder="コマンド・ページを検索"
+      >
+        {#each paletteMatches as item, i}
+          <li>
+            <button aria-selected={i === 0} onclick={() => paletteOpen = false}>
+              {item.label}<span class="sub">{item.sub}</span>
+            </button>
+          </li>
+        {/each}
+        {#if paletteMatches.length === 0}
+          <li><span class="label">一致する候補がありません</span></li>
+        {/if}
+        {#snippet hints()}
+          <span><Kbd>↑</Kbd><Kbd>↓</Kbd> 移動</span>
+          <span><Kbd>↵</Kbd> 決定</span>
+          <span><Kbd>esc</Kbd> 閉じる</span>
+        {/snippet}
+      </Palette>
+    </Section>
+
     <Section heading="確認・入力ダイアログ（confirmDialog / promptDialog）">
       <Cluster>
         <Button onclick={async () => { dialogResult = `confirm → ${await confirmDialog({ message: 'この操作を実行してもよろしいですか？' })}`; }}>confirm</Button>
@@ -384,6 +446,39 @@
         <div><dt>ロール</dt><dd>管理者</dd></div>
         <div><dt>登録日</dt><dd>2025-01-15</dd></div>
       </DefinitionList>
+    </Section>
+
+    <Section heading="情報行 (rows)">
+      <p>先頭マーク / 主・副テキスト / 数値 / 末尾の 4 スロット。スロットは全て任意。</p>
+      <List variants={['rows', 'bordered', 'interactive']}>
+        <Row title="本番 API" sub="api.example.com" value="22.4k">
+          {#snippet lead()}<Dot variant="success" />{/snippet}
+          {#snippet trail()}<Badge variant="success">稼働中</Badge>{/snippet}
+        </Row>
+        <Row title="ステージング API" sub="stg.example.com" value="1.8k" state="selected">
+          {#snippet lead()}<Dot variant="warning" />{/snippet}
+          {#snippet trail()}<Badge variant="warning">遅延</Badge>{/snippet}
+        </Row>
+        <Row title="バッチワーカー" sub="worker-01" value="0" state="danger">
+          {#snippet lead()}<Dot />{/snippet}
+          {#snippet trail()}<Badge variant="danger">停止</Badge>{/snippet}
+        </Row>
+      </List>
+    </Section>
+
+    <Section heading="情報行・密度 (rows + compact)">
+      <p>行の高さを詰める。副テキストは書く側が省く。</p>
+      <List variants={['rows', 'compact', 'bordered']}>
+        <Row title="deploy #1284" value="2m 14s">
+          {#snippet lead()}<Dot variant="success" />{/snippet}
+        </Row>
+        <Row title="deploy #1283" value="1m 58s">
+          {#snippet lead()}<Dot variant="success" />{/snippet}
+        </Row>
+        <Row title="deploy #1282" value="0m 41s">
+          {#snippet lead()}<Dot />{/snippet}
+        </Row>
+      </List>
     </Section>
   </Section>
 </Main>

@@ -53,6 +53,7 @@ adminkit.js の挙動を Svelte 側が再現できているか。対応したら
 | DataTable: ヘッダーチェックの `indeterminate` 表示 | あり | `DataTable.svelte` で `someSelected` を `indeterminate` にバインド | ✅ |
 | ナビ: `aria-current` の親 `details` 自動展開 | あり | `+layout.svelte` で `open={pathname.startsWith(...)}` により宣言的に処理（adminkit.js より堅牢） | ✅ |
 | ミニサイドバー: hover で入れ子 `details` を展開（アクティブページ含む場合は維持） | あり（`adminkit.js` 130-147） | `ShellMini.svelte` に action `use:miniHover` で移植 | ✅ |
+| dialog 3 部品: 背景（`section` の外）を押して閉じる | あり（`dialog.c-modal, dialog.c-drawer, dialog.c-palette`・adminkit 0.1.11 で modal 決め打ちから拡張） | `Modal` / `Drawer` / `Palette` の `handleClick` で `e.target === dialog` を判定 | ✅ |
 
 ## 移植「不要」な項目（Svelte / プラットフォームが代替するもの）
 
@@ -62,6 +63,9 @@ adminkit.js の挙動を Svelte 側が再現できているか。対応したら
 - **Dropdown の Escape / 外側クリック閉じ** — ネイティブ Popover API が処理
 - **Toast の HTML エスケープ** — Svelte が `{}` 補間で自動エスケープ。`escapeHtml` 相当は不要
 - **行クリック遷移（`data-href`）** — Svelte では props / イベントで表現する設計。属性フックは移植しない
+- **Palette の候補の絞り込み・上下移動** — **adminkit 側にも無い**（何を候補にするかがアプリ固有のため）。
+  両者とも CSS と dialog の開閉だけを持つ。片方だけに足すとドリフトになるので、必要になったら
+  adminkit 側から先に足す
 
 ## Svelte 独自の追加機能（adminkit.js に対応物なし）
 
@@ -74,3 +78,6 @@ adminkit.js の挙動を Svelte 側が再現できているか。対応したら
 
 - adminkit に新しい対話挙動を足したら、このチェックリストに 1 行追加し、Svelte 側の対応状況を記録する
 - CSS だけの変更（トークン追加・リファクタ等）はクラス契約が不変なら Svelte 側の対応不要。バージョン bump で取り込む
+- **adminkit に部品・バリアントが増えたらクラス契約が増えるので、Svelte 側にも対応物を足す**。
+  対話挙動が無い部品でも、利用側が生のクラス名を書かずに済むようにラッパーを置く
+  （置かないと利用側が `class="c-…"` を直書きし始め、契約の変更に追随できなくなる）

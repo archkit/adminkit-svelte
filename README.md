@@ -249,14 +249,18 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Card` | `heading?: string`, `variant?: 'danger'` | カード。`<section>` で出力。`heading` で自動レベルの見出しを出力 |
 | `Table` | `compact?: boolean`, `auto?: boolean` | テーブル（`c-table-scroll` + `c-table`）。単純なテーブル用 |
 | `DataTable` | `data: T[]`, `columns: Column[]`, `selectable?: boolean`, `compact?: boolean`, `filter?: Snippet`, `row?: Snippet`, `cell?: Snippet`, `actions?: Snippet` | データテーブル。ソート・チェックボックス・フィルタ・アクション列を統合。`cell` で `<td>` のクラスを自動付与 |
-| `List` | `variants?: ('bordered' \| 'striped' \| 'interactive' \| 'disc' \| 'decimal')[]`, `as?: 'ul' \| 'ol'` | リスト。`as="ol"` で番号付きリスト |
+| `List` | `variants?: ('bordered' \| 'striped' \| 'interactive' \| 'disc' \| 'decimal' \| 'rows' \| 'compact')[]`, `as?: 'ul' \| 'ol'` | リスト。`as="ol"` で番号付きリスト。`rows` で中身を情報行（`Row`）にする。`compact` は `rows` と併せたときだけ効く |
+| `Row` | `lead?: Snippet`, `title?: string`, `sub?: string`, `value?: string`, `trail?: Snippet`, `state?: 'selected' \| 'danger'` | 情報行（`List` の `rows` の中に置く `<li>`）。先頭マーク / 主・副テキスト / 数値 / 末尾の 4 スロット。全て任意 |
 | `DefinitionList` | `variants?: ('bordered' \| 'striped' \| 'horizontal')[]` | 定義リスト（`<dl>` で出力） |
 | `Badge` | `variant?: 'primary' \| 'success' \| 'warning' \| 'danger'` | バッジ |
 | `Tag` | `variant?: 'primary' \| 'success' \| 'warning' \| 'danger'`, `ondismiss?: () => void` | タグ。`ondismiss` で削除ボタン表示 |
 | `TagList` | — | タグの折り返しコンテナ |
 | `Avatar` | `label: string`, `initial: string`, `size?: 'small' \| 'large'` | アバター |
 | `Stats` | `label: string`, `value: string`, `sub?: Snippet`, `accent?: boolean`, `icon?: Snippet` | KPI カード。見出しレベルは自動管理 |
-| `Progress` | `value: number`, `max?: number`, `variant?: string`, `pageTop?: boolean`, `label: string`, `showLabel?: boolean` | プログレスバー |
+| `Progress` | `value: number`, `max?: number`, `variant?: string`, `pageTop?: boolean`, `label: string`, `showLabel?: boolean` | プログレスバー（native `<progress>`）。単一の進捗はこちら |
+| `Meter` | `segments: { width: number; variant? }[]`, `size?: 'default' \| 'stacked' \| 'inline'`, `label: string`, `value?: string` | 内訳の帯。区分が複数あるとき（`<progress>` は値を 1 つしか持てない）。`value` を渡すとラベル行が出る |
+| `Strip` | `cells: { height: number; variant?; title? }[]`, `compact?: boolean`, `label: string`, `from?: string`, `to?: string` | 時間の帯（時間 × 状態 × 量）。`from` と `to` の両方を渡すと目盛が出る |
+| `Kbd` | — | キーヒント。組み合わせは `Kbd` を並べて書く |
 | `Stepper` | `steps: { label: string; state?: 'done' \| 'active' }[]` | ステッパー |
 | `Skeleton` | `shape?: 'text' \| 'circle'`, `width?: string`, `height?: string`, `label?: string \| null` | スケルトンローダー。`label={null}` で装飾扱い（親が読み込み中を伝えているとき） |
 | `SkeletonRow` | `cols: number` | テーブルの読み込み中プレースホルダ（1 行分の `<tr>`）。**実テーブルの `<tbody>` の中に置く** — ヘッダーが消えず、列幅もテーブルレイアウトが決めるため読み込み後のずれが小さい。読み上げは `<table aria-busy={loading}>` 側に付ける |
@@ -264,7 +268,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `LoadingState` | `compact?: boolean`, `message?: string`, `label?: string` | 領域中央のスピナー（+ 補足テキスト）。**形が分からない / 面積が小さい領域**（ページ全体・モーダル内）に使う。`EmptyState` と余白が揃えてある |
 | `Dot` | `variant?: 'accent' \| 'success' \| 'warning'`, `count?: number \| string` | 通知ドット。`count` で数値表示 |
 | `Divider` | `label?: string` | 区切り線。`label` でテキスト付き |
-| `EmptyState` | `heading?: string`, `icon?: Snippet` | 空状態の表示。`heading` で自動レベルの見出しを出力 |
+| `EmptyState` | `heading?: string`, `icon?: Snippet`, `variant?: 'error'`, `compact?: boolean` | 中身が無いときの表示。`heading` で自動レベルの見出しを出力。`variant="error"` は取得失敗（寸法は空のときと同じまま）。空 / 読み込み中（`LoadingState`）/ 失敗を同じ高さで置き換えられる |
 
 ### フィードバック
 
@@ -275,6 +279,8 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数。Shell に内蔵されているため配置不要 |
 | `clearToasts()` | — | 全トーストをクリア |
 | `Modal` | `open: boolean`, `label: string`, `size?: 'default' \| 'wide'`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御。`size="wide"`（48rem）は表・コード・長文など既定幅（32rem）に収まらないコンテンツ用 |
+| `Drawer` | `open: boolean`, `label: string`, `header?: Snippet`, `footer?: Snippet` | 右端に固定する縦長のパネル。`bind:open` で開閉制御。一覧を表示したまま 1 件を長く読む・編集するとき（判断を 1 つ求めるだけなら `Modal`） |
+| `Palette` | `open: boolean`, `label: string`, `query?: string`, `placeholder?: string`, `hints?: Snippet` | コマンドパレット。`bind:open` / `bind:query`。候補は children に `<li>` を並べる。**候補の絞り込みと上下移動は含まない**（アプリ固有のため。adminkit 側も同じ範囲） |
 | `confirmDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, danger?, requireText? }` | `window.confirm` の置き換え。`Promise<boolean>` を返す（キャンセル・Esc・背景クリックは false）。ホストは Shell / ShellTopnav に内蔵されているため配置不要。Enter 誤爆防止のため初期フォーカスはキャンセル側。**`requireText`** を渡すと、その文字列を完全一致で入力するまで実行ボタンが無効になる（取り返しのつかない操作向け・`danger` との併用が前提。入力欄へ初期フォーカス） |
 | `promptDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, initial?, placeholder? }` | `window.prompt` の置き換え。`Promise<string \| null>` を返す（キャンセル・Esc・背景クリックは null）。Enter で確定 |
 | `setDialogDefaults(labels)` | `{ confirmLabel?, cancelLabel? }` | ダイアログボタンの既定ラベル（初期値 OK / キャンセル）を差し替える。i18n するアプリはレイアウトで呼ぶ |

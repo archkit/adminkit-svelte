@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  type Variant = 'bordered' | 'striped' | 'interactive' | 'disc' | 'decimal';
+  /**
+   * rows … li を 4 スロットの情報行にする（Row を中に並べる）
+   * compact … rows と併せて指定したときだけ効く（行の高さを詰める）
+   */
+  type Variant = 'bordered' | 'striped' | 'interactive' | 'disc' | 'decimal' | 'rows' | 'compact';
 
   interface Props {
     variants?: Variant[];
