@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { createBackdropDismiss } from './backdrop-dismiss.js';
 
   /**
    * コマンドパレット（.c-palette）。画面の上寄りに出す、検索欄付きの一覧。
@@ -48,9 +49,20 @@
     open = false;
   }
 
+  // 内側の section の外＝背景を「押して離した」ときだけ閉じる。判定の実体は backdrop-dismiss.ts
+  // （click の target だけで見ると、検索欄の中で押して背景で離すドラッグでも閉じ、入力を捨てる）
+  const backdrop = createBackdropDismiss();
+
+  function handleMouseDown(e: MouseEvent) {
+    backdrop.down(e.target === dialog);
+  }
+
+  function handleMouseUp(e: MouseEvent) {
+    backdrop.up(e.target === dialog);
+  }
+
   function handleClick(e: MouseEvent) {
-    // dialog 要素そのもの＝内側の section の外を押したときだけ閉じる
-    if (e.target === dialog) {
+    if (backdrop.shouldDismiss(e.target === dialog)) {
       open = false;
     }
   }
@@ -61,6 +73,8 @@
   class="c-palette"
   aria-label={label}
   onclose={handleClose}
+  onmousedown={handleMouseDown}
+  onmouseup={handleMouseUp}
   onclick={handleClick}
 >
   <section>

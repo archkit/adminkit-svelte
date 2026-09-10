@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { getHeadingLevel, setHeadingLevel } from './heading-level.js';
+  import { createBackdropDismiss } from './backdrop-dismiss.js';
 
   // Modal 内の見出しは親セクションのレベルを引き継ぐ
   setHeadingLevel(getHeadingLevel());
@@ -32,8 +33,20 @@
     open = false;
   }
 
+  // 内側の section の外＝背景を「押して離した」ときだけ閉じる。判定の実体は backdrop-dismiss.ts
+  // （click の target だけで見ると、入力の中で押して背景で離すドラッグでも閉じ、編集中の入力を捨てる）
+  const backdrop = createBackdropDismiss();
+
+  function handleMouseDown(e: MouseEvent) {
+    backdrop.down(e.target === dialog);
+  }
+
+  function handleMouseUp(e: MouseEvent) {
+    backdrop.up(e.target === dialog);
+  }
+
   function handleClick(e: MouseEvent) {
-    if (e.target === dialog) {
+    if (backdrop.shouldDismiss(e.target === dialog)) {
       open = false;
     }
   }
@@ -45,6 +58,8 @@
   class:wide={size === 'wide'}
   aria-label={label}
   onclose={handleClose}
+  onmousedown={handleMouseDown}
+  onmouseup={handleMouseUp}
   onclick={handleClick}
 >
   <section>
