@@ -141,7 +141,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 |---|---|---|
 | `crumbs` | `{ label: string; href?: string }[]` | パンくずリスト。最後の要素が現在のページ |
 | `actions` | `Snippet?` | パンくず右側のアクション（ThemeSwitcher 等） |
-| `width` | `'full' \| 'wide' \| 'center'` | コンテンツの最大幅。未指定で 60rem |
+| `width` | `'normal' \| 'full' \| 'wide' \| 'center'` | コンテンツの最大幅。未指定で adminkit の `--content-max`（既定 60rem）。`normal` は 60rem 固定、`wide` は 80rem、`full` は制限なし |
 | `bar` | `Snippet?` | `main-content` の外に配置するバー（ActionBar 等） |
 | `children` | `Snippet` | ページコンテンツ |
 

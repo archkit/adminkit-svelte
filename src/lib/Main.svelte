@@ -8,7 +8,7 @@
     href?: string;
   }
 
-  type ContentWidth = 'full' | 'wide' | 'center';
+  type ContentWidth = 'normal' | 'full' | 'wide' | 'center';
 
   interface Props {
     crumbs?: Crumb[];
