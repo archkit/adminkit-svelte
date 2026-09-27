@@ -290,7 +290,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Tabs` | `tabs: { id, label, content: Snippet }[]`, `active?: string`, `label: string` | タブ。キーボードナビゲーション対応 |
 | `Accordion` | `label?: string`, `note?: string`, `open?: boolean`, `flush?: boolean`, `header?: Snippet` | 折りたたみ（details/summary）。`bind:open` で開閉制御。既定は閉。`note` は見出しの右に薄く添える補足（件数など）。表をそのまま入れるときは `flush` で中身の余白を外す。開閉はスライドする（`::details-content` 非対応ブラウザでは瞬時） |
 | `Pagination` | `current: number`, `total: number`, `href?: (page) => string`, `onchange?: (page) => void` | ページネーション |
-| `ActionBar` | `count: number`, `sticky?: boolean` | 一括操作バー。`count > 0` で表示 |
+| `ActionBar` | `count: number`, `sticky?: boolean`, `label?: string`, `summary?: Snippet<[number]>` | 一括操作バー。`count > 0` で表示。件数の表示は既定で「N件選択中」。表示言語を切り替える画面では `summary` で件数から文言を組み、`label`（読み上げ用の名前・既定は「一括操作」）も渡す |
 | `ErrorPage` | `code: number \| string`, `title: string`, `message: string`, `danger?: boolean` | エラーページ |
 | `ThemeSwitcher` | — | テーマ切替 UI（トグルボタン + スタイル選択ドロップダウン） |
 
