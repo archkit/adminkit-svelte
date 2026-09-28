@@ -17,7 +17,7 @@
   interface Props {
     open: boolean;
     label: string;
-    /** 'wide' で幅 64rem（1 件を長く読むとき）。既定は 25rem */
+    /** 'wide' で本文の領域いっぱい（サイドバーを除く・上限 80rem。1 件を長く読むとき）。既定は 25rem */
     size?: 'default' | 'wide';
     /** 画面の端から少し離して出す（角を丸め、線で縁取る） */
     inset?: boolean;
