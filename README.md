@@ -279,7 +279,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数。Shell に内蔵されているため配置不要 |
 | `clearToasts()` | — | 全トーストをクリア |
 | `Modal` | `open: boolean`, `label: string`, `size?: 'default' \| 'wide'`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御。`size="wide"`（48rem）は表・コード・長文など既定幅（32rem）に収まらないコンテンツ用 |
-| `Drawer` | `open: boolean`, `label: string`, `header?: Snippet`, `footer?: Snippet` | 右端に固定する縦長のパネル。`bind:open` で開閉制御。一覧を表示したまま 1 件を長く読む・編集するとき（判断を 1 つ求めるだけなら `Modal`） |
+| `Drawer` | `open: boolean`, `label: string`, `size?: 'default' \| 'wide'`, `inset?: boolean`, `flush?: boolean`, `header?: Snippet`, `footer?: Snippet` | 右端に固定する縦長のパネル。`bind:open` で開閉制御。一覧を表示したまま 1 件を長く読む・編集するとき（判断を 1 つ求めるだけなら `Modal`）。`size="wide"` で幅 47rem、`inset` で画面の端から少し離して出す（角丸・縁取り）、`flush` で本文の余白を 0 にして縦に並べる（中身が見出し・閉じるボタン・スクロールを自分で持つとき。`header` / `footer` は渡さない） |
 | `Palette` | `open: boolean`, `label: string`, `query?: string`, `placeholder?: string`, `hints?: Snippet` | コマンドパレット。`bind:open` / `bind:query`。候補は children に `<li>` を並べる。**候補の絞り込みと上下移動は含まない**（アプリ固有のため。adminkit 側も同じ範囲） |
 | `confirmDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, danger?, requireText? }` | `window.confirm` の置き換え。`Promise<boolean>` を返す（キャンセル・Esc・背景クリックは false）。ホストは Shell / ShellTopnav に内蔵されているため配置不要。Enter 誤爆防止のため初期フォーカスはキャンセル側。**`requireText`** を渡すと、その文字列を完全一致で入力するまで実行ボタンが無効になる（取り返しのつかない操作向け・`danger` との併用が前提。入力欄へ初期フォーカス） |
 | `promptDialog(opts)` | `{ message, title?, confirmLabel?, cancelLabel?, initial?, placeholder? }` | `window.prompt` の置き換え。`Promise<string \| null>` を返す（キャンセル・Esc・背景クリックは null）。Enter で確定 |
@@ -290,7 +290,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Tabs` | `tabs: { id, label, content: Snippet }[]`, `active?: string`, `label: string` | タブ。キーボードナビゲーション対応 |
 | `Accordion` | `label?: string`, `note?: string`, `open?: boolean`, `flush?: boolean`, `header?: Snippet` | 折りたたみ（details/summary）。`bind:open` で開閉制御。既定は閉。`note` は見出しの右に薄く添える補足（件数など）。表をそのまま入れるときは `flush` で中身の余白を外す。開閉はスライドする（`::details-content` 非対応ブラウザでは瞬時） |
 | `Pagination` | `current: number`, `total: number`, `href?: (page) => string`, `onchange?: (page) => void` | ページネーション |
-| `ActionBar` | `count: number`, `sticky?: boolean`, `label?: string`, `summary?: Snippet<[number]>` | 一括操作バー。`count > 0` で表示。件数の表示は既定で「N件選択中」。表示言語を切り替える画面では `summary` で件数から文言を組み、`label`（読み上げ用の名前・既定は「一括操作」）も渡す |
+| `ActionBar` | `count: number`, `sticky?: boolean`, `floating?: boolean`, `label?: string`, `summary?: Snippet<[number]>` | 一括操作バー。`count > 0` で表示。件数の表示は既定で「N件選択中」。表示言語を切り替える画面では `summary` で件数から文言を組み、`label`（読み上げ用の名前・既定は「一括操作」）も渡す。`floating` で画面下部の中央に小さく重ねて出す（`sticky` は使わない） |
 | `ErrorPage` | `code: number \| string`, `title: string`, `message: string`, `danger?: boolean` | エラーページ |
 | `ThemeSwitcher` | — | テーマ切替 UI（トグルボタン + スタイル選択ドロップダウン） |
 

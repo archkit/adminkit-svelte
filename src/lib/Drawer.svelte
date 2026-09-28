@@ -17,12 +17,27 @@
   interface Props {
     open: boolean;
     label: string;
+    /** 'wide' で幅 47rem（1 件を長く読むとき）。既定は 25rem */
+    size?: 'default' | 'wide';
+    /** 画面の端から少し離して出す（角を丸め、線で縁取る） */
+    inset?: boolean;
+    /** 本文の余白を 0 にし縦に並べる。中身が余白・並べ方・スクロールを自分で持つとき（header / footer を使わない画面など） */
+    flush?: boolean;
     header?: Snippet;
     footer?: Snippet;
     children: Snippet;
   }
 
-  let { open = $bindable(), label, header, footer, children }: Props = $props();
+  let {
+    open = $bindable(),
+    label,
+    size = 'default',
+    inset = false,
+    flush = false,
+    header,
+    footer,
+    children,
+  }: Props = $props();
 
   let dialog: HTMLDialogElement | undefined = $state();
 
@@ -61,6 +76,9 @@
 <dialog
   bind:this={dialog}
   class="c-drawer"
+  class:wide={size === 'wide'}
+  class:inset
+  class:flush
   aria-label={label}
   onclose={handleClose}
   onmousedown={handleMouseDown}
