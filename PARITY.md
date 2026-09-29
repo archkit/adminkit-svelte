@@ -53,6 +53,7 @@ adminkit.js の挙動を Svelte 側が再現できているか。対応したら
 | DataTable: ヘッダーチェックの `indeterminate` 表示 | あり | `DataTable.svelte` で `someSelected` を `indeterminate` にバインド | ✅ |
 | ナビ: `aria-current` の親 `details` 自動展開 | あり | `+layout.svelte` で `open={pathname.startsWith(...)}` により宣言的に処理（adminkit.js より堅牢） | ✅ |
 | ミニサイドバー: hover で入れ子 `details` を展開（アクティブページ含む場合は維持） | あり（`adminkit.js` 130-147） | `ShellMini.svelte` に action `use:miniHover` で移植 | ✅ |
+| サイドバー（狭い画面）: 開いたサイドバーの外（覆い）を押して閉じる | あり（`adminkit.js`「Sidebar toggle (mobile)」） | `Shell.svelte` で `.shell` 自身（覆いは `::after`）を押して離したときに閉じる。判定は `backdrop-dismiss.ts` を共有（2026-09-29 まで未移植で、覆いを押しても閉じなかった） | ✅ |
 | dialog 3 部品: 背景（`section` の外）を押して閉じる | あり（`dialog.c-modal, dialog.c-drawer, dialog.c-palette`・adminkit 0.1.11 で modal 決め打ちから拡張） | `Modal` / `Drawer` / `Palette` の `handleClick` で `e.target === dialog` を判定 | ✅ |
 
 ## 移植「不要」な項目（Svelte / プラットフォームが代替するもの）

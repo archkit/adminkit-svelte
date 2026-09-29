@@ -17,7 +17,7 @@
   interface Props {
     open: boolean;
     label: string;
-    /** 'wide' で本文の領域いっぱい（サイドバーを除く・上限 80rem。1 件を長く読むとき）。既定は 25rem */
+    /** 'wide' で 50rem（1 件を長く読むとき・adminkit 0.1.21 以降）。既定は 25rem */
     size?: 'default' | 'wide';
     /** 画面の端から少し離して出す（角を丸め、線で縁取る） */
     inset?: boolean;
